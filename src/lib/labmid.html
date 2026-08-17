@@ -1,0 +1,55 @@
+<!-- ================= user-form.html ================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <form id="userForm" novalidate>
+        <h2>Register User</h2>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>User Name</label>
+                <input type="text" id="username" placeholder="Enter username" minlength="5" maxlength="20" required>
+                <div class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="Enter email" required>
+                <div class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter password" minlength="8" required>
+                <div class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm password" required>
+                <div class="error"></div>
+            </div>
+
+
+                <div class="error"></div>
+            </div>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<script src="user-form.js"></script>
+</body>
+</html>
+
+
+
