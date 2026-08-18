@@ -6,7 +6,7 @@ import { FOOTER_COLUMNS, performFooterAction } from "../lib/footerActions";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-// â”€â”€ Mock reports (replace with: fetch("/api/reports/my")) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Mock reports (replace with: fetch("/api/reports/my")) ────────────────────
 const MOCK_REPORTS = [
   {
     _id: "r1",
@@ -65,14 +65,14 @@ const MOCK_REPORTS = [
   },
 ];
 
-// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Helpers ────────────────────────────────────────────────────────────────
 const statusMeta = (s) => ({
-  Ready:      { color:"#22c55e", bg:"rgba(34,197,94,0.12)",   border:"rgba(34,197,94,0.3)",   icon:"âœ…", label:"Ready"      },
-  Processing: { color:"#f59e0b", bg:"rgba(245,158,11,0.12)",  border:"rgba(245,158,11,0.3)",  icon:"â³", label:"Processing" },
-  Pending:    { color:"#60a5fa", bg:"rgba(96,165,250,0.12)",  border:"rgba(96,165,250,0.3)",  icon:"ðŸ•", label:"Pending"    },
-}[s] || { color:"#9ca3af", bg:"rgba(255,255,255,0.06)", border:"rgba(255,255,255,0.1)", icon:"â€¢", label:s });
+  Ready:      { color:"#22c55e", bg:"rgba(34,197,94,0.12)",   border:"rgba(34,197,94,0.3)",   icon:"✅", label:"Ready"      },
+  Processing: { color:"#f59e0b", bg:"rgba(245,158,11,0.12)",  border:"rgba(245,158,11,0.3)",  icon:"⏳", label:"Processing" },
+  Pending:    { color:"#60a5fa", bg:"rgba(96,165,250,0.12)",  border:"rgba(96,165,250,0.3)",  icon:"🕐", label:"Pending"    },
+}[s] || { color:"#9ca3af", bg:"rgba(255,255,255,0.06)", border:"rgba(255,255,255,0.1)", icon:"•", label:s });
 
-const catIcon = (c) => ({ Radiology:"ðŸ©»", Haematology:"ðŸ©¸", Biochemistry:"âš—ï¸" }[c] || "ðŸ§ª");
+const catIcon = (c) => ({ Radiology:"🩻", Haematology:"🩸", Biochemistry:"⚗️" }[c] || "🧪");
 
 const fmt = (d) => new Date(d + "T00:00:00").toLocaleDateString("en-PK", { day:"numeric", month:"short", year:"numeric" });
 
@@ -94,7 +94,7 @@ const mapReportFromApi = (report) => ({
   fileUrl: report.fileUrl || report.downloadUrl,
 });
 
-// â”€â”€ LabLogo â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── LabLogo ────────────────────────────────────────────────────────────────
 function LabLogo({ size = 36 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -108,7 +108,7 @@ function LabLogo({ size = 36 }) {
   );
 }
 
-// â”€â”€ Footer (identical to MedicalTest) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Footer (identical to MedicalTest) ────────────────────────────────────────
 function Footer({ mobile }) {
   const navigate = useNavigate();
   return (
@@ -119,7 +119,7 @@ function Footer({ mobile }) {
             <div style={S.logoWrap}><LabLogo size={32} /></div>
             <span style={{ color:"#fff", fontWeight:800, fontSize:17 }}>T-City <span style={{ color:"#fca5a5" }}>Lab</span></span>
           </div>
-          <p style={{ fontSize:13, lineHeight:1.7, color:"#fca5a5", margin:0 }}>Modern medical lab services online â€” Islamabad, Pakistan.</p>
+          <p style={{ fontSize:13, lineHeight:1.7, color:"#fca5a5", margin:0 }}>Modern medical lab services online — Islamabad, Pakistan.</p>
         </div>
         {FOOTER_COLUMNS.map((col) => (
           <div key={col.heading}>
@@ -132,12 +132,12 @@ function Footer({ mobile }) {
           </div>
         ))}
       </div>
-      <div style={S.footerBottom}>Â© 2026 T-City Lab Â· Developed by Muhammad Fawad Aslam Â· BSCS-7, Quaid-e-Azam University, Islamabad</div>
+      <div style={S.footerBottom}>© 2026 T-City Lab · Developed by Muhammad Fawad Aslam · BSCS-7, Quaid-e-Azam University, Islamabad</div>
     </footer>
   );
 }
 
-// â”€â”€ Report Detail Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Report Detail Modal ────────────────────────────────────────────────────
 function ReportModal({ report, mobile, onClose }) {
   const meta = statusMeta(report.status);
   return (
@@ -146,22 +146,22 @@ function ReportModal({ report, mobile, onClose }) {
         {/* Header */}
         <div style={S.modalHeader}>
           <div>
-            <h3 style={S.modalTitle}>ðŸ“„ Report Details</h3>
+            <h3 style={S.modalTitle}>📄 Report Details</h3>
             <p style={S.modalSub}>Appointment ID: <span style={{ color:"#60a5fa", fontWeight:700 }}>{report.apptId}</span></p>
           </div>
-          <button onClick={onClose} style={S.iconBtn}>âœ•</button>
+          <button onClick={onClose} style={S.iconBtn}>✕</button>
         </div>
 
         {/* Test Info */}
         <div style={S.modalInfoBox}>
           <div style={{ ...S.cardIconBox, width:48, height:48, fontSize:22, marginBottom:12 }}>{catIcon(report.category)}</div>
           <div style={{ fontSize:20, fontWeight:800, color:"#111827", marginBottom:4 }}>{report.testName}</div>
-          <div style={{ fontSize:13, color:"#6b7280" }}>ðŸ‘¨â€âš•ï¸ {report.doctor} &nbsp;â€¢&nbsp; {report.category}</div>
+          <div style={{ fontSize:13, color:"#6b7280" }}>👨‍⚕️ {report.doctor} &nbsp;•&nbsp; {report.category}</div>
         </div>
 
         {/* Details grid */}
         <div style={{ display:"grid", gridTemplateColumns: mobile ? "1fr" : "1fr 1fr", gap:10, marginBottom:16 }}>
-          {[["ðŸ“… Date", fmt(report.date)], ["ðŸ“‹ Status", report.status]].map(([l, v]) => (
+          {[["📅 Date", fmt(report.date)], ["📋 Status", report.status]].map(([l, v]) => (
             <div key={l} style={S.detailBox}>
               <div style={S.detailBoxLabel}>{l}</div>
               <div style={{ ...S.detailBoxValue, ...(l.includes("Status") && { color: meta.color }) }}>{v}</div>
@@ -171,7 +171,7 @@ function ReportModal({ report, mobile, onClose }) {
 
         {/* Notes */}
         <div style={S.noteBox}>
-          <div style={S.noteLabel}>ðŸ©º Doctor's Note</div>
+          <div style={S.noteLabel}>🩺 Doctor's Note</div>
           <p style={S.noteText}>{report.note}</p>
         </div>
 
@@ -180,7 +180,7 @@ function ReportModal({ report, mobile, onClose }) {
           <button onClick={onClose} style={S.secondaryBtn}>Close</button>
           {report.status === "Ready" && report.fileUrl ? (
             <a href={report.fileUrl} download style={{ ...S.downloadBtn, textDecoration:"none", textAlign:"center" }}>
-              â¬‡ Download Report
+              ⬇ Download Report
             </a>
           ) : (
             <button disabled style={{ ...S.downloadBtn, opacity:0.4, cursor:"not-allowed" }}>
@@ -193,7 +193,7 @@ function ReportModal({ report, mobile, onClose }) {
   );
 }
 
-// â”€â”€ Report Card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Report Card ────────────────────────────────────────────────────────────
 function ReportCard({ report, mobile, onView }) {
   const [hovered, setHovered] = useState(false);
   const meta = statusMeta(report.status);
@@ -214,15 +214,15 @@ function ReportCard({ report, mobile, onView }) {
 
       {/* Title + doctor */}
       <h3 style={S.cardTitle}>{report.testName}</h3>
-      <p style={S.cardDoctor}>ðŸ‘¨â€âš•ï¸ {report.doctor} &nbsp;â€¢&nbsp; {report.category}</p>
+      <p style={S.cardDoctor}>👨‍⚕️ {report.doctor} &nbsp;•&nbsp; {report.category}</p>
 
       {/* Note */}
-      <p style={S.cardNote}>{report.note.length > 80 ? report.note.slice(0, 80) + "â€¦" : report.note}</p>
+      <p style={S.cardNote}>{report.note.length > 80 ? report.note.slice(0, 80) + "…" : report.note}</p>
 
       {/* Date + Appt ID */}
       <div style={S.cardMeta}>
-        <span style={S.metaChip}>ðŸ“… {fmt(report.date)}</span>
-        <span style={S.metaChip}>ðŸ†” {report.apptId}</span>
+        <span style={S.metaChip}>📅 {fmt(report.date)}</span>
+        <span style={S.metaChip}>🆔 {report.apptId}</span>
       </div>
 
       {/* Actions */}
@@ -230,11 +230,11 @@ function ReportCard({ report, mobile, onView }) {
         <button onClick={() => onView(report)} style={S.viewBtn}>View Details</button>
         {report.status === "Ready" && report.fileUrl ? (
           <a href={report.fileUrl} download style={{ ...S.downloadBtnSmall, textDecoration:"none", textAlign:"center" }}>
-            â¬‡ Download
+            ⬇ Download
           </a>
         ) : (
           <button disabled style={{ ...S.downloadBtnSmall, opacity:0.35, cursor:"not-allowed" }}>
-            â¬‡ {report.status === "Ready" ? "No File" : "Pending"}
+            ⬇ {report.status === "Ready" ? "No File" : "Pending"}
           </button>
         )}
       </div>
@@ -242,7 +242,7 @@ function ReportCard({ report, mobile, onView }) {
   );
 }
 
-// â”€â”€ Main Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Main Page ────────────────────────────────────────────────────────────────
 export default function Report() {
   const navigate = useNavigate();
   const [session,     setSession]     = useState(() => getSession());
@@ -332,10 +332,10 @@ export default function Report() {
     <div style={S.page}>
       <style>{`body,html{margin:0;padding:0;background:#f8f9fa !important;}`}</style>
 
-      {/* â•â• NAVBAR (unchanged) â•â• */}
+      {/* ══ NAVBAR (unchanged) ══ */}
       <PortalNavbar mobile={mobile} />
 
-      {/* â•â• SESSION BANNER (unchanged) â•â• */}
+      {/* ══ SESSION BANNER (unchanged) */}
       <section style={S.sessionBar}>
         <div style={{ ...S.container, ...(mobile && S.containerMobile), ...S.sessionInner }}>
           <div style={S.avatar}>{(user.name || "P").charAt(0).toUpperCase()}</div>
@@ -354,28 +354,28 @@ export default function Report() {
         </div>
       </section>
 
-      {/* â•â• MAIN CONTENT â•â• */}
+      {/* ══ MAIN CONTENT ══ */}
       <main style={{ ...S.main, ...(mobile && S.mainMobile) }}>
 
-        {/* â”€â”€ Hero search panel â”€â”€ */}
+        {/* ── Hero search panel ── */}
         <div style={S.heroPanel}>
           <h1 style={{ ...S.heroTitle, ...(mobile && { fontSize:22 }) }}>My Test Reports</h1>
           <p style={S.heroSub}>Search and download your medical test reports. Track processing status in real time.</p>
           <div style={{ position:"relative", maxWidth:500, margin:"0 auto" }}>
-            <span style={S.searchIcon}>ðŸ”</span>
+            <span style={S.searchIcon}>🔍</span>
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by test name, doctor, or appointment IDâ€¦"
+              placeholder="Search by test name, doctor, or appointment ID…"
               style={S.searchInput}
             />
             {search && (
-              <button onClick={() => setSearch("")} style={S.clearBtn}>âœ•</button>
+              <button onClick={() => setSearch("")} style={S.clearBtn}>✕</button>
             )}
           </div>
         </div>
 
-        {/* â”€â”€ Status filter chips â”€â”€ */}
+        {/* ── Status filter chips ── */}
         <div style={{ ...S.filterRow, ...(mobile && { gap:6 }) }}>
           {STATUS_FILTERS.map((f) => {
             const meta = f !== "All" ? statusMeta(f) : null;
@@ -400,23 +400,23 @@ export default function Report() {
           })}
         </div>
 
-        {/* â”€â”€ Result count â”€â”€ */}
+        {/* ── Result count ── */}
         {!loading && (
           <p style={S.resultCount}>
             Showing <strong>{filtered.length}</strong> report{filtered.length !== 1 ? "s" : ""}
-            {statusFilter !== "All" && ` Â· ${statusFilter}`}
-            {search && ` Â· matching "${search}"`}
+            {statusFilter !== "All" && ` · ${statusFilter}`}
+            {search && ` · matching "${search}"`}
           </p>
         )}
 
-        {/* â”€â”€ Loading skeletons â”€â”€ */}
+        {/* ── Loading skeletons ── */}
         {loading && (
           <div style={S.grid}>
             {Array.from({ length: 4 }, (_, i) => <div key={i} style={S.skeletonCard} />)}
           </div>
         )}
 
-        {/* â”€â”€ Report cards â”€â”€ */}
+        {/* ── Report cards ── */}
         {!loading && filtered.length > 0 && (
           <div style={S.grid}>
             {filtered.map((r) => (
@@ -425,10 +425,10 @@ export default function Report() {
           </div>
         )}
 
-        {/* â”€â”€ Empty state â”€â”€ */}
+        {/* ── Empty state ── */}
         {!loading && filtered.length === 0 && (
           <div style={S.emptyState}>
-            <div style={{ fontSize:52, marginBottom:14 }}>ðŸ“‹</div>
+            <div style={{ fontSize:52, marginBottom:14 }}>📋</div>
             <div style={S.emptyTitle}>No reports found</div>
             <p style={{ color:"#6b7280", fontSize:14, margin:"0 0 20px" }}>
               {search ? `No results for "${search}".` : "No reports match the selected filter."}
@@ -441,15 +441,15 @@ export default function Report() {
         )}
       </main>
 
-      {/* â•â• FOOTER (unchanged) â•â• */}
+      {/* ══ FOOTER (unchanged) ══ */}
       <Footer mobile={mobile} />
 
-      {/* â•â• MODAL â•â• */}
+      {/* ══ MODAL ══ */}
       {viewTarget && (
         <ReportModal report={viewTarget} mobile={mobile} onClose={() => setViewTarget(null)} />
       )}
 
-      {/* â•â• TOAST â•â• */}
+      {/* ══ TOAST ══ */}
       {toast && (
         <div style={{ ...S.toast, ...(mobile && S.toastMobile) }}>{toast}</div>
       )}
@@ -459,19 +459,19 @@ export default function Report() {
   );
 }
 
-// â”€â”€ Styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Styles ────────────────────────────────────────────────────────────────
 const S = {
-  // â”€â”€ Page â”€â”€
+  // ── Page ──
   page:            { minHeight:"100vh", background:"linear-gradient(160deg,#220405 0%,#4a0b0d 42%,#1a0304 100%)", color:"#f3f4f6", fontFamily:"'Segoe UI',system-ui,sans-serif", display:"flex", flexDirection:"column" },
   container:       { maxWidth:1200, margin:"0 auto", padding:28 },
   main:            { maxWidth:1200, margin:"0 auto", padding:"0 28px 56px", width:"100%", boxSizing:"border-box" },
   mainMobile:      { padding:"0 16px 40px" },
   containerMobile: { padding:"16px" },
 
-  // â”€â”€ Navbar ref â”€â”€
+  // ── Navbar ref ──
   logoWrap:        { width:36, height:36, borderRadius:8, background:"#fff", display:"flex", alignItems:"center", justifyContent:"center" },
 
-  // â”€â”€ Session bar (UNCHANGED) â”€â”€
+  // ── Session bar (UNCHANGED) ──
   sessionBar:      { background:"linear-gradient(135deg,#5a0a0a 0%,#3b0505 60%,#4a0b0d 100%)", borderBottom:"1px solid rgba(248,113,113,0.25)" },
   sessionInner:    { display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" },
   avatar:          { width:48, height:48, borderRadius:"50%", background:"linear-gradient(135deg,#ef4444,#991b1b)", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontSize:20, color:"#fff" },
@@ -483,7 +483,7 @@ const S = {
   statValue:       { fontSize:20, fontWeight:800, color:"#fca5a5" },
   statLabel:       { fontSize:10, color:"#fecaca", textTransform:"uppercase", letterSpacing:0.6 },
 
-  // â”€â”€ Hero panel (dark crimson) â”€â”€
+  // ── Hero panel (dark crimson) ──
   heroPanel:       { textAlign:"center", padding:"44px 16px 32px", marginBottom:0 },
   heroTitle:       { margin:"0 0 8px", fontSize:30, fontWeight:800, color:"#f8fafc" },
   heroSub:         { margin:"0 auto 22px", color:"#fecaca", fontSize:14, maxWidth:500, lineHeight:1.7 },
@@ -491,13 +491,13 @@ const S = {
   searchInput:     { width:"100%", padding:"13px 40px 13px 42px", borderRadius:12, border:"1px solid rgba(252,165,165,0.2)", background:"rgba(255,255,255,0.07)", color:"#f3f4f6", fontSize:14, outline:"none", boxSizing:"border-box" },
   clearBtn:        { position:"absolute", right:12, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:"#9ca3af", cursor:"pointer", fontSize:14, padding:"2px 6px" },
 
-  // â”€â”€ Filters â”€â”€
+  // ── Filters ──
   filterRow:       { display:"flex", alignItems:"center", gap:8, flexWrap:"wrap", padding:"18px 0 8px" },
   chip:            { padding:"7px 14px", borderRadius:999, border:"1px solid rgba(252,165,165,0.2)", background:"rgba(255,255,255,0.05)", color:"#fecaca", fontSize:13, fontWeight:500, cursor:"pointer", display:"flex", alignItems:"center", gap:6, transition:"all .15s" },
   chipCount:       { fontSize:11, padding:"1px 7px", borderRadius:999, background:"rgba(255,255,255,0.1)", color:"#fca5a5" },
   resultCount:     { color:"#fca5a5", fontSize:13, margin:"2px 0 16px" },
 
-  // â”€â”€ Grid & Cards â”€â”€
+  // ── Grid & Cards ──
   grid:            { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,280px),1fr))", gap:20 },
   card:            { position:"relative", background:"#2a0608", border:"1px solid rgba(220,38,38,0.35)", borderRadius:16, padding:22, boxShadow:"0 8px 28px rgba(0,0,0,0.45)", transition:"all .2s ease", display:"flex", flexDirection:"column" },
   cardHover:       { boxShadow:"0 14px 36px rgba(0,0,0,0.6)", transform:"translateY(-3px)", borderColor:"rgba(252,165,165,0.4)" },
@@ -515,11 +515,11 @@ const S = {
 
   skeletonCard:    { background:"rgba(255,255,255,0.04)", border:"1px solid rgba(139,0,0,0.3)", borderRadius:16, minHeight:220, animation:"pulse 1.5s infinite" },
 
-  // â”€â”€ Empty â”€â”€
+  // ── Empty ──
   emptyState:      { textAlign:"center", padding:"64px 0", display:"flex", flexDirection:"column", alignItems:"center" },
   emptyTitle:      { fontSize:22, fontWeight:800, color:"#f8fafc", marginBottom:8 },
 
-  // â”€â”€ Modal (dark) â”€â”€
+  // ── Modal (dark) ──
   overlay:         { position:"fixed", inset:0, padding:18, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(0,0,0,0.75)", backdropFilter:"blur(5px)", zIndex:50 },
   modal:           { width:"100%", maxWidth:500, maxHeight:"92vh", overflowY:"auto", padding:28, borderRadius:20, background:"#1c0505", border:"1px solid rgba(139,0,0,0.5)", boxShadow:"0 24px 60px rgba(0,0,0,0.5)" },
   modalMobile:     { padding:18 },
@@ -537,12 +537,12 @@ const S = {
   secondaryBtn:    { flex:1, padding:"11px 14px", borderRadius:10, border:"1px solid rgba(255,255,255,0.12)", background:"rgba(255,255,255,0.06)", color:"#f3f4f6", fontWeight:600, cursor:"pointer", fontSize:13 },
   downloadBtn:     { flex:1, padding:"11px 14px", borderRadius:10, border:"none", background:"#dc2626", color:"#fff", fontWeight:700, fontSize:13, cursor:"pointer", display:"block" },
 
-  // â”€â”€ Footer (UNCHANGED) â”€â”€
+  // ── Footer (UNCHANGED) ──
   footer:          { marginTop:"auto", background:"#130202", borderTop:"1px solid rgba(139,0,0,0.5)", padding:"48px 0 0" },
   footerLink:      { display:"block", width:"fit-content", padding:0, border:"none", background:"transparent", fontSize:13, marginBottom:9, cursor:"pointer", color:"#fca5a5", lineHeight:1.5, textAlign:"left" },
   footerBottom:    { borderTop:"1px solid rgba(255,255,255,0.08)", padding:"20px 28px", textAlign:"center", fontSize:12, color:"#fca5a5" },
 
-  // â”€â”€ Toast â”€â”€
+  // ── Toast ──
   toast:           { position:"fixed", right:24, bottom:24, maxWidth:440, padding:"13px 18px", borderRadius:12, background:"#14532d", color:"#f0fdf4", border:"1px solid rgba(34,197,94,0.3)", boxShadow:"0 10px 24px rgba(0,0,0,0.3)", zIndex:60, fontSize:14, fontWeight:600 },
   toastMobile:     { left:16, right:16, bottom:16, maxWidth:"none" },
-};
+}
