@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { clearSession, getSession } from "../lib/auth";
+import { FOOTER_COLUMNS, performFooterAction } from "../lib/footerActions";
 
 const NAV_ITEMS   = ["MedicalTest", "Appointment", "Report", "HomeSample"];
 const TIME_SLOTS  = ["Morning", "Afternoon", "Evening"];
@@ -63,11 +64,7 @@ function LabLogo({ size = 36 }) {
 }
 
 function Footer({ mobile }) {
-  const cols = [
-    { h:"Services", ls:["Book Appointment","Home Collection","View Reports","Test List"] },
-    { h:"Company",  ls:["About Us","Contact","Privacy Policy","Terms"] },
-    { h:"Reach Us", ls:["H-9, Islamabad","info@tcitylab.pk","+92 300 1234567","Mon-Sat 8am-8pm"] },
-  ];
+  const navigate = useNavigate();
 
   return (
     <footer style={S.footer}>
@@ -79,10 +76,14 @@ function Footer({ mobile }) {
           </div>
           <p style={{ fontSize:13, lineHeight:1.7, color:"#fca5a5", margin:0 }}>Modern medical lab services online - Islamabad, Pakistan.</p>
         </div>
-        {cols.map((col) => (
-          <div key={col.h}>
-            <div style={{ color:"#fff", fontWeight:700, marginBottom:14, fontSize:14, textTransform:"uppercase", letterSpacing:0.6 }}>{col.h}</div>
-            {col.ls.map((l) => <div key={l} style={{ fontSize:13, marginBottom:9, cursor:"pointer", color:"#fca5a5", lineHeight:1.5 }}>{l}</div>)}
+        {FOOTER_COLUMNS.map((col) => (
+          <div key={col.heading}>
+            <div style={{ color:"#fff", fontWeight:700, marginBottom:14, fontSize:14, textTransform:"uppercase", letterSpacing:0.6 }}>{col.heading}</div>
+            {col.links.map((link) => (
+              <button key={link.label} type="button" onClick={() => performFooterAction(link, navigate)} style={S.footerLink}>
+                {link.label}
+              </button>
+            ))}
           </div>
         ))}
       </div>
@@ -375,6 +376,7 @@ function RescheduleModal({ appt, mobile, onClose, onConfirm }) {
 function PatientCard({ appt, mobile, onReschedule }) {
   const meta   = statusMeta(appt.status);
   const canAct = appt.status === "Confirmed" || appt.status === "Pending";
+  const hasCollector = appt.collectorName || appt.bikeNumber || appt.collectorContact || appt.reachTime;
 
   return (
     <article style={S.card}>
@@ -408,6 +410,18 @@ function PatientCard({ appt, mobile, onReschedule }) {
           </div>
         ))}
       </div>
+
+      {appt.homeCollection && hasCollector && (
+        <div style={S.collectorBox}>
+          <div style={S.collectorTitle}>ASSIGNED COLLECTOR</div>
+          <div style={S.collectorGrid}>
+            <span>Name: {appt.collectorName || "Not assigned"}</span>
+            <span>Bike: {appt.bikeNumber || "Not assigned"}</span>
+            <span>Contact: {appt.collectorContact || "Not assigned"}</span>
+            <span>Reach Time: {appt.reachTime || "Not assigned"}</span>
+          </div>
+        </div>
+      )}
 
       <div style={S.metaStrip}>
         <span style={S.metaChip}>Booked on {fmt(appt.bookedOn)}</span>
@@ -818,7 +832,7 @@ const S = {
   filterCountActive:{ background:"rgba(255,255,255,0.2)", color:"#fff" },
 
   // Patient cards
-  grid:             { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))", gap:18 },
+  grid:             { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,300px),1fr))", gap:18 },
   card:             { background:"rgba(255,255,255,0.04)", border:"1px solid rgba(139,0,0,0.35)", borderRadius:18, padding:22, boxShadow:"0 8px 28px rgba(0,0,0,0.24)" },
   cardHead:         { display:"flex", justifyContent:"space-between", gap:14, flexWrap:"wrap", alignItems:"flex-start", marginBottom:14 },
   cardEyebrow:      { fontSize:11, color:"#fca5a5", fontWeight:800, textTransform:"uppercase", letterSpacing:0.8, marginBottom:8 },
@@ -835,6 +849,9 @@ const S = {
   bookedOn:         { fontSize:11, color:"#6b7280", marginBottom:2 },
   metaStrip:        { display:"flex", gap:8, flexWrap:"wrap", marginTop:12 },
   metaChip:         { display:"inline-flex", alignItems:"center", padding:"6px 10px", borderRadius:999, background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.08)", color:"#d1d5db", fontSize:11, fontWeight:700 },
+  collectorBox:     { marginTop:12, padding:"12px 14px", background:"#ecfdf5", borderTop:"1px solid #86efac", borderBottom:"1px solid #86efac", color:"#065f46" },
+  collectorTitle:   { marginBottom:10, color:"#008000", fontSize:12, fontWeight:900, textTransform:"uppercase", letterSpacing:0.5 },
+  collectorGrid:    { display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))", gap:"8px 18px", fontSize:12, color:"#065f46" },
   statusNote:       { marginTop:12, color:"#fecaca", fontSize:12, lineHeight:1.6 },
   warnBox:          { marginTop:10, padding:"8px 12px", borderRadius:8, background:"rgba(245,158,11,0.1)", border:"1px solid rgba(245,158,11,0.3)", color:"#fbbf24", fontSize:12 },
   rescheduleBtn:    { padding:"11px 14px", borderRadius:10, border:"none", background:"#d97706", color:"#fff", fontWeight:700, cursor:"pointer", fontSize:13 },
@@ -879,5 +896,6 @@ const S = {
   toast:            { position:"fixed", right:24, bottom:24, maxWidth:440, padding:"14px 18px", borderRadius:12, color:"#f0fdf4", boxShadow:"0 10px 24px rgba(0,0,0,0.35)", zIndex:60, border:"1px solid" },
   toastMobile:      { left:16, right:16, bottom:16, maxWidth:"none" },
   footer:           { marginTop:"auto", background:"#130202", borderTop:"1px solid rgba(139,0,0,0.5)", padding:"48px 0 0" },
+  footerLink:       { display:"block", width:"fit-content", padding:0, border:"none", background:"transparent", fontSize:13, marginBottom:9, cursor:"pointer", color:"#fca5a5", lineHeight:1.5, textAlign:"left" },
   footerBottom:     { borderTop:"1px solid rgba(255,255,255,0.08)", padding:"20px 28px", textAlign:"center", fontSize:12, color:"#fca5a5" },
 };

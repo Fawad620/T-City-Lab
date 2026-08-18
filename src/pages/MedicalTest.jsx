@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PortalNavbar from "../components/PortalNavbar";
 import { getSession } from "../lib/auth";
 import aiLogo from "../assets/ai-chatbot-logo.png.png";
+import { FOOTER_COLUMNS, performFooterAction } from "../lib/footerActions";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const PUBLIC_APP_URL = import.meta.env.VITE_PUBLIC_APP_URL || "";
@@ -483,11 +484,7 @@ function StatusPill({ status }) {
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
 function Footer({ mobile }) {
-  const cols = [
-    { h: "Services", ls: ["Book Appointment", "Home Collection", "View Reports", "Test List"] },
-    { h: "Company", ls: ["About Us", "Contact", "Privacy Policy", "Terms"] },
-    { h: "Reach Us", ls: ["H-9, Islamabad", "info@tcitylab.pk", "+92 300 1234567", "Mon-Sat 8am-8pm"] },
-  ];
+  const navigate = useNavigate();
 
   return (
     <footer style={{ marginTop: "auto", background: "#130202", borderTop: "1px solid rgba(139,0,0,0.5)", padding: "48px 0 0" }}>
@@ -508,11 +505,18 @@ function Footer({ mobile }) {
           </div>
           <p style={{ fontSize: 13, lineHeight: 1.7, color: "#fca5a5", margin: 0 }}>Modern medical lab services online - Islamabad, Pakistan.</p>
         </div>
-        {cols.map((col) => (
-          <div key={col.h}>
-            <div style={{ color: "#fff", fontWeight: 700, marginBottom: 14, fontSize: 14, textTransform: "uppercase", letterSpacing: 0.6 }}>{col.h}</div>
-            {col.ls.map((l) => (
-              <div key={l} style={{ fontSize: 13, marginBottom: 9, cursor: "pointer", color: "#fca5a5", lineHeight: 1.5 }}>{l}</div>
+        {FOOTER_COLUMNS.map((col) => (
+          <div key={col.heading}>
+            <div style={{ color: "#fff", fontWeight: 700, marginBottom: 14, fontSize: 14, textTransform: "uppercase", letterSpacing: 0.6 }}>{col.heading}</div>
+            {col.links.map((link) => (
+              <button
+                key={link.label}
+                type="button"
+                onClick={() => performFooterAction(link, navigate)}
+                style={{ display:"block", width:"fit-content", padding:0, border:"none", background:"transparent", fontSize:13, marginBottom:9, cursor:"pointer", color:"#fca5a5", lineHeight:1.5, textAlign:"left" }}
+              >
+                {link.label}
+              </button>
             ))}
           </div>
         ))}
@@ -1120,7 +1124,7 @@ export default function MedicalTest() {
         {loading ? (
           <div style={{ textAlign: "center", color: "#fecaca", padding: "48px 0", fontSize: 15 }}>Loading medical tests...</div>
         ) : filteredTests.length ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(270px,1fr))", gap: 18 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,270px),1fr))", gap: 18 }}>
             {filteredTests.map((test) => (
               <article
                 key={test._id || test.id}

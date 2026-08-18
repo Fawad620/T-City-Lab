@@ -404,7 +404,7 @@ export default function PatientProfile() {
         {activeTab === "profile" && (
           <>
             <Section title="Personal Info" icon="👤">
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,180px),1fr))", gap: 12 }}>
                 {[
                   ["Full Name", patient.name],
                   ["Email", patient.email || "—"],
@@ -424,7 +424,7 @@ export default function PatientProfile() {
             </Section>
 
             <Section title="Lab Info" icon="🏥">
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,180px),1fr))", gap: 12 }}>
                 {[
                   ["Lab", "T-City Lab"],
                   ["Location", "H-9, Islamabad"],
@@ -486,7 +486,7 @@ export default function PatientProfile() {
                       bg={appt.status === "completed" ? "rgba(34,197,94,0.12)" : appt.status === "confirmed" ? "rgba(96,165,250,0.12)" : "rgba(251,191,36,0.12)"}
                     />
                   </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,150px),1fr))", gap: 8 }}>
                     {[
                       ["Date", appt.date || "—"],
                       ["Time", appt.time || "—"],
@@ -536,7 +536,7 @@ export default function PatientProfile() {
                       bg={report.status === "ready" || report.status === "completed" ? "rgba(34,197,94,0.12)" : "rgba(251,191,36,0.12)"}
                     />
                   </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 10 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,150px),1fr))", gap: 8, marginBottom: 10 }}>
                     {[
                       ["Report ID", report.reportId || report._id?.slice(-6).toUpperCase() || "—"],
                       ["Date", report.date || "—"],

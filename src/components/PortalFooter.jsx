@@ -1,3 +1,6 @@
+import { useNavigate } from "react-router-dom";
+import { FOOTER_COLUMNS, performFooterAction } from "../lib/footerActions";
+
 function LabLogo({ size = 32 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -11,13 +14,9 @@ function LabLogo({ size = 32 }) {
   );
 }
 
-const footerColumns = [
-  { heading: "Services", links: ["Book Appointment", "Home Collection", "View Reports", "Test List"] },
-  { heading: "Company", links: ["About Us", "Contact", "Privacy Policy", "Terms"] },
-  { heading: "Reach Us", links: ["H-9, Islamabad", "info@tcitylab.pk", "+92 300 1234567", "Mon-Sat 8am-8pm"] },
-];
-
 export default function PortalFooter({ mobile }) {
+  const navigate = useNavigate();
+
   return (
     <footer style={styles.footer}>
       <div
@@ -40,13 +39,18 @@ export default function PortalFooter({ mobile }) {
           <p style={styles.brandText}>Modern medical lab services online in Islamabad, Pakistan.</p>
         </div>
 
-        {footerColumns.map((column) => (
+        {FOOTER_COLUMNS.map((column) => (
           <div key={column.heading}>
             <div style={styles.heading}>{column.heading}</div>
             {column.links.map((item) => (
-              <div key={item} style={styles.linkText}>
-                {item}
-              </div>
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => performFooterAction(item, navigate)}
+                style={styles.linkButton}
+              >
+                {item.label}
+              </button>
             ))}
           </div>
         ))}
@@ -108,11 +112,18 @@ const styles = {
     textTransform: "uppercase",
     letterSpacing: 0.6,
   },
-  linkText: {
+  linkButton: {
+    display: "block",
+    width: "fit-content",
+    padding: 0,
+    border: "none",
+    background: "transparent",
     fontSize: 13,
     marginBottom: 9,
     color: "#fca5a5",
     lineHeight: 1.5,
+    cursor: "pointer",
+    textAlign: "left",
   },
   bottom: {
     borderTop: "1px solid rgba(255,255,255,0.08)",

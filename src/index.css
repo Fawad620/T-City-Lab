@@ -19,6 +19,10 @@ body {
   overflow-x: hidden;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 img,
 svg,
 video,
@@ -31,4 +35,26 @@ select,
 textarea,
 button {
   font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 720px) {
+  body {
+    min-width: 0;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
 }

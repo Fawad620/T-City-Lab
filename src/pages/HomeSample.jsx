@@ -1,16 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import homeSampleBanner from "../assets/home-sample-banner.png";
 import { useNavigate } from "react-router-dom";
 import { clearSession, getSession } from "../lib/auth";
+import { FOOTER_COLUMNS, performFooterAction } from "../lib/footerActions";
 
 const NAV_ITEMS  = ["MedicalTest", "Appointment", "Report", "Home Sample"];
-const TIME_SLOTS = ["Morning (8am–11am)", "Afternoon (12pm–3pm)", "Evening (4pm–7pm)"];
+const TIME_SLOTS = ["Morning (8amâ€“11am)", "Afternoon (12pmâ€“3pm)", "Evening (4pmâ€“7pm)"];
 const HOME_CHARGE = 300; // PKR home collection fee
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-// ── Blood tests only (home collection) ───────────────────────────────────────
+// â”€â”€ Blood tests only (home collection) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const BLOOD_TESTS = [
-  { name:"Blood CP",        doctor:"Dr. Ayesha", price:1500, duration:"24 hrs", desc:"Complete blood picture — RBC, WBC, platelets, haemoglobin." },
+  { name:"Blood CP",        doctor:"Dr. Ayesha", price:1500, duration:"24 hrs", desc:"Complete blood picture â€” RBC, WBC, platelets, haemoglobin." },
   { name:"Blood Sugar",     doctor:"Dr. Ayesha", price:800,  duration:"2 hrs",  desc:"Fasting or random glucose level for diabetes screening."    },
   { name:"Liver Function",  doctor:"Dr. Saad",   price:3500, duration:"48 hrs", desc:"Liver enzymes, bilirubin, and protein level evaluation."    },
   { name:"Thyroid Profile", doctor:"Dr. Sana",   price:4500, duration:"48 hrs", desc:"TSH, T3 and T4 hormone levels for thyroid assessment."       },
@@ -20,14 +21,14 @@ const BLOOD_TESTS = [
   { name:"Vitamin D",       doctor:"Dr. Sana",   price:3500, duration:"48 hrs", desc:"25-OH Vitamin D level to check bone and immune health."      },
 ];
 
-// ── Coverage areas (within 50 km of T-City Lab, H-9 Islamabad) ───────────────
+// â”€â”€ Coverage areas (within 50 km of T-City Lab, H-9 Islamabad) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const COVERAGE_AREAS = [
   { city:"Islamabad",   areas:["F-6","F-7","F-8","F-9","F-10","F-11","G-6","G-7","G-8","G-9","G-10","G-11","H-8","H-9","H-10","H-11","I-8","I-9","I-10","E-7","E-8","Blue Area","Bahria Town","DHA","CDA Sectors"] },
   { city:"Rawalpindi",  areas:["Saddar","Chaklala","Gulraiz","Satellite Town","Dhoke Khabba","Raja Bazar","Liaquat Bagh","Committee Chowk","Westridge","Adiala Road"] },
   { city:"Nearby",      areas:["Taxila (35 km)","Wah Cantt (40 km)","Attock (48 km)","Murree (45 km)","Fateh Jang (50 km)"] },
 ];
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const genRequestId = () => {
   const ts  = Date.now().toString(36).toUpperCase();
   const rnd = Math.random().toString(36).substring(2, 5).toUpperCase();
@@ -44,11 +45,11 @@ const toClientStatus = (status) => ({
 }[status] || status || "Pending");
 
 const getStatusStyle = (status) => ({
-  Confirmed: { icon:"✓", color:"#4ade80", bg:"rgba(34,197,94,0.14)", border:"rgba(34,197,94,0.35)" },
-  Pending:   { icon:"⏳", color:"#fbbf24", bg:"rgba(245,158,11,0.14)", border:"rgba(245,158,11,0.35)" },
-  Rejected:  { icon:"✕", color:"#f87171", bg:"rgba(248,113,113,0.14)", border:"rgba(248,113,113,0.35)" },
-  Completed: { icon:"✓", color:"#60a5fa", bg:"rgba(96,165,250,0.14)", border:"rgba(96,165,250,0.35)" },
-}[status] || { icon:"•", color:"#e5e7eb", bg:"rgba(255,255,255,0.06)", border:"rgba(255,255,255,0.1)" });
+  Confirmed: { icon:"âœ“", color:"#4ade80", bg:"rgba(34,197,94,0.14)", border:"rgba(34,197,94,0.35)" },
+  Pending:   { icon:"â³", color:"#fbbf24", bg:"rgba(245,158,11,0.14)", border:"rgba(245,158,11,0.35)" },
+  Rejected:  { icon:"âœ•", color:"#f87171", bg:"rgba(248,113,113,0.14)", border:"rgba(248,113,113,0.35)" },
+  Completed: { icon:"âœ“", color:"#60a5fa", bg:"rgba(96,165,250,0.14)", border:"rgba(96,165,250,0.35)" },
+}[status] || { icon:"â€¢", color:"#e5e7eb", bg:"rgba(255,255,255,0.06)", border:"rgba(255,255,255,0.1)" });
 
 const formatHomeRequest = (appointment) => ({
   _id: appointment._id,
@@ -73,7 +74,7 @@ const formatHomeRequest = (appointment) => ({
 
 const makeTestId = (testName) => `HSC-${testName.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toUpperCase()}`;
 
-// ── LabLogo ───────────────────────────────────────────────────────────────────
+// â”€â”€ LabLogo â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function LabLogo({ size = 36 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -87,13 +88,9 @@ function LabLogo({ size = 36 }) {
   );
 }
 
-// ── Footer ────────────────────────────────────────────────────────────────────
+// â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function Footer({ mobile }) {
-  const cols = [
-    { h:"Services", ls:["Book Appointment","Home Collection","View Reports","Test List"] },
-    { h:"Company",  ls:["About Us","Contact","Privacy Policy","Terms"] },
-    { h:"Reach Us", ls:["H-9, Islamabad","info@tcitylab.pk","+92 300 1234567","Mon–Sat 8am–8pm"] },
-  ];
+  const navigate = useNavigate();
   return (
     <footer style={S.footer}>
       <div style={{ maxWidth:1200, margin:"0 auto", padding: mobile ? "0 16px 24px" : "0 28px 24px", display:"grid", gridTemplateColumns: mobile ? "1fr 1fr" : "repeat(4,1fr)", gap: mobile ? 28 : 40, marginBottom:32 }}>
@@ -102,21 +99,25 @@ function Footer({ mobile }) {
             <div style={S.logoWrap}><LabLogo size={32} /></div>
             <span style={{ color:"#fff", fontWeight:800, fontSize:17 }}>T-City <span style={{ color:"#fca5a5" }}>Lab</span></span>
           </div>
-          <p style={{ fontSize:13, lineHeight:1.7, color:"#fca5a5", margin:0 }}>Modern medical lab services online — Islamabad, Pakistan.</p>
+          <p style={{ fontSize:13, lineHeight:1.7, color:"#fca5a5", margin:0 }}>Modern medical lab services online â€” Islamabad, Pakistan.</p>
         </div>
-        {cols.map((col) => (
-          <div key={col.h}>
-            <div style={{ color:"#fff", fontWeight:700, marginBottom:14, fontSize:14, textTransform:"uppercase", letterSpacing:0.6 }}>{col.h}</div>
-            {col.ls.map((l) => <div key={l} style={{ fontSize:13, marginBottom:9, cursor:"pointer", color:"#fca5a5", lineHeight:1.5 }}>{l}</div>)}
+        {FOOTER_COLUMNS.map((col) => (
+          <div key={col.heading}>
+            <div style={{ color:"#fff", fontWeight:700, marginBottom:14, fontSize:14, textTransform:"uppercase", letterSpacing:0.6 }}>{col.heading}</div>
+            {col.links.map((link) => (
+              <button key={link.label} type="button" onClick={() => performFooterAction(link, navigate)} style={S.footerLink}>
+                {link.label}
+              </button>
+            ))}
           </div>
         ))}
       </div>
-      <div style={S.footerBottom}>© 2026 T-City Lab · Developed by Muhammad Fawad Aslam · BSCS-7, Quaid-e-Azam University, Islamabad</div>
+      <div style={S.footerBottom}>Â© 2026 T-City Lab Â· Developed by Muhammad Fawad Aslam Â· BSCS-7, Quaid-e-Azam University, Islamabad</div>
     </footer>
   );
 }
 
-// ── Request Form Modal ────────────────────────────────────────────────────────
+// â”€â”€ Request Form Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function RequestModal({ user, mobile, submitting, onClose, onSubmit }) {
   const reqId = useState(() => genRequestId())[0];
   const [form, setForm] = useState({
@@ -165,10 +166,10 @@ function RequestModal({ user, mobile, submitting, onClose, onSubmit }) {
       <div style={{ ...S.modal, maxWidth:600, ...(mobile && S.modalMobile) }}>
         <div style={S.modalHeader}>
           <div>
-            <h3 style={S.modalTitle}>🏠 Request Home Sample Collection</h3>
+            <h3 style={S.modalTitle}>ðŸ  Request Home Sample Collection</h3>
             <p style={S.modalSub}>Our phlebotomist will visit your address at the selected time</p>
           </div>
-          <button onClick={onClose} style={S.iconBtn}>✕</button>
+          <button onClick={onClose} style={S.iconBtn}>âœ•</button>
         </div>
 
         {/* Request ID */}
@@ -177,7 +178,7 @@ function RequestModal({ user, mobile, submitting, onClose, onSubmit }) {
           <span style={S.apptIdValue}>{reqId}</span>
         </div>
 
-        {/* ── Patient Info ── */}
+        {/* â”€â”€ Patient Info â”€â”€ */}
         <div style={S.secDiv}>Patient Information</div>
         <div style={{ ...S.twoCol, ...(mobile && S.oneCol) }}>
           <div style={S.fg}>
@@ -220,7 +221,7 @@ function RequestModal({ user, mobile, submitting, onClose, onSubmit }) {
           <span style={{ fontSize:11, color:"#9ca3af", marginTop:4 }}>Must be within 50 km of H-9 Islamabad</span>
         </div>
 
-        {/* ── Test & Schedule ── */}
+        {/* â”€â”€ Test & Schedule â”€â”€ */}
         <div style={S.secDiv}>Blood Test & Schedule</div>
 
         <div style={{ ...S.fg, marginBottom:12 }}>
@@ -233,7 +234,7 @@ function RequestModal({ user, mobile, submitting, onClose, onSubmit }) {
             <option value="" style={S.selectDark}>-- Choose a blood test --</option>
             {BLOOD_TESTS.map((t) => (
               <option key={t.name} value={t.name} style={S.selectDark}>
-                {t.name} — PKR {t.price.toLocaleString()} + PKR {HOME_CHARGE} (collection)
+                {t.name} â€” PKR {t.price.toLocaleString()} + PKR {HOME_CHARGE} (collection)
               </option>
             ))}
           </select>
@@ -245,8 +246,8 @@ function RequestModal({ user, mobile, submitting, onClose, onSubmit }) {
           <div style={S.infoBox}>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:8 }}>
               <div>
-                <div style={S.infoName}>🩸 {selectedTest.name}</div>
-                <div style={S.infoMeta}>👨‍⚕️ {selectedTest.doctor} &nbsp;•&nbsp; ⏱ {selectedTest.duration}</div>
+                <div style={S.infoName}>ðŸ©¸ {selectedTest.name}</div>
+                <div style={S.infoMeta}>ðŸ‘¨â€âš•ï¸ {selectedTest.doctor} &nbsp;â€¢&nbsp; â± {selectedTest.duration}</div>
                 <div style={{ color:"#d1d5db", fontSize:12, marginTop:4 }}>{selectedTest.desc}</div>
               </div>
               <div style={{ textAlign:"right", flexShrink:0 }}>
@@ -314,7 +315,7 @@ function RequestModal({ user, mobile, submitting, onClose, onSubmit }) {
           <button onClick={onClose} style={S.secondaryBtn}>Cancel</button>
           <button onClick={handleSubmit} disabled={submitting || !isReady}
             style={{ ...S.primaryBtn, flex:1, opacity: isReady && !submitting ? 1 : 0.5, cursor: isReady && !submitting ? "pointer" : "not-allowed" }}>
-            {submitting ? "Submitting..." : "✅ Submit Request"}
+            {submitting ? "Submitting..." : "âœ… Submit Request"}
           </button>
         </div>
       </div>
@@ -322,37 +323,37 @@ function RequestModal({ user, mobile, submitting, onClose, onSubmit }) {
   );
 }
 
-// ── Blood Test Card ───────────────────────────────────────────────────────────
+// â”€â”€ Blood Test Card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function TestCard({ test, onRequest }) {
   const [hovered, setHovered] = useState(false);
   return (
     <article style={{ ...S.card, ...(hovered && S.cardHover) }}
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
       <div style={S.cardTop}>
-        <span style={S.bloodIcon}>🩸</span>
+        <span style={S.bloodIcon}>ðŸ©¸</span>
         <div style={{ textAlign:"right" }}>
           <div style={{ color:"#fca5a5", fontSize:11, fontWeight:600 }}>Test</div>
           <div style={S.cardPrice}>PKR {test.price.toLocaleString()}</div>
         </div>
       </div>
       <h3 style={S.cardTitle}>{test.name}</h3>
-      <p style={S.cardDoctor}>👨‍⚕️ {test.doctor}</p>
+      <p style={S.cardDoctor}>ðŸ‘¨â€âš•ï¸ {test.doctor}</p>
       <p style={S.cardText}>{test.desc}</p>
       <div style={S.cardBottom}>
         <div>
-          <span style={S.chip}>⏱ {test.duration}</span>
+          <span style={S.chip}>â± {test.duration}</span>
         </div>
         <div style={{ textAlign:"right" }}>
           <div style={{ color:"#9ca3af", fontSize:10 }}>+ PKR {HOME_CHARGE} collection</div>
           <div style={{ color:"#f59e0b", fontWeight:800, fontSize:13 }}>Total PKR {(test.price + HOME_CHARGE).toLocaleString()}</div>
         </div>
       </div>
-      <button onClick={() => onRequest(test)} style={S.requestBtn}>🏠 Request at Home</button>
+      <button onClick={() => onRequest(test)} style={S.requestBtn}>ðŸ  Request at Home</button>
     </article>
   );
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
+// â”€â”€ Main Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function HomeSample() {
   const navigate = useNavigate();
   const [session,    setSession]    = useState(() => getSession());
@@ -490,7 +491,7 @@ export default function HomeSample() {
       setRequests((p) => [formatHomeRequest(body.appointment), ...p]);
       setModalOpen(false);
       setPreselect("");
-      setToast({ msg:`✅ Request ${data.reqId} submitted! Our team will contact you on ${data.whatsapp} to confirm.`, type:"ok" });
+      setToast({ msg:`âœ… Request ${data.reqId} submitted! Our team will contact you on ${data.whatsapp} to confirm.`, type:"ok" });
     } catch (submitError) {
       setToast({ msg:submitError.message || "Unable to submit request.", type:"err" });
     } finally {
@@ -502,7 +503,7 @@ export default function HomeSample() {
     <div style={S.page}>
       <style>{`body,html{margin:0;padding:0;background:#1a0304 !important;}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.45}}`}</style>
 
-      {/* ══ NAVBAR ══ */}
+      {/* â•â• NAVBAR â•â• */}
       <nav style={{ ...S.nav, ...(mobile && S.navMobile) }}>
         <div style={S.brand}>
           <div style={S.logoWrap}><LabLogo /></div>
@@ -522,7 +523,7 @@ export default function HomeSample() {
         <button onClick={handleLogout} style={{ ...S.logoutButton, ...(mobile && S.fullWidth) }}>Log Out</button>
       </nav>
 
-      {/* ══ SESSION BANNER ══ */}
+      {/* â•â• SESSION BANNER â•â• */}
       <section style={S.sessionBar}>
         <div style={{ ...S.container, ...(mobile && S.containerMobile), ...S.sessionInner }}>
           <div style={S.avatar}>{(user.name || "P").charAt(0).toUpperCase()}</div>
@@ -541,19 +542,19 @@ export default function HomeSample() {
         </div>
       </section>
 
-      {/* ══ MAIN ══ */}
+      {/* â•â• MAIN â•â• */}
       <main style={{ ...S.container, ...(mobile && S.containerMobile), paddingBottom:60 }}>
 
-        {/* ── Infographic Banner ── */}
+        {/* â”€â”€ Infographic Banner â”€â”€ */}
         <div style={S.bannerWrap}>
           <img
             src={homeSampleBanner}
-            alt="T-City Lab Home Sample Collection by Bike — within 50 KM, 6-step process"
+            alt="T-City Lab Home Sample Collection by Bike â€” within 50 KM, 6-step process"
             style={{ ...S.bannerImg, ...(mobile && S.bannerImgMobile) }}
           />
           <div style={{ ...S.bannerOverlay, ...(mobile && { display:"none" }) }}>
             <button onClick={() => setModalOpen(true)} style={S.bannerBtn}>
-              🏠 Request Home Collection
+              ðŸ  Request Home Collection
             </button>
           </div>
         </div>
@@ -561,31 +562,31 @@ export default function HomeSample() {
         {mobile && (
           <div style={{ textAlign:"center", margin:"16px 0 8px" }}>
             <button onClick={() => setModalOpen(true)} style={{ ...S.heroBtn, width:"100%" }}>
-              🏠 Request Home Collection
+              ðŸ  Request Home Collection
             </button>
           </div>
         )}
 
-        {/* ── Hero ── */}
-        <div style={S.hero}>
+        {/* â”€â”€ Hero â”€â”€ */}
+        <div style={{ ...S.hero, ...(mobile && S.heroMobile) }}>
           <div style={S.heroText}>
-            <div style={S.heroBadge}>🏠 Home Collection Service</div>
+            <div style={S.heroBadge}>ðŸ  Home Collection Service</div>
             <h1 style={{ ...S.heroTitle, ...(mobile && { fontSize:26 }) }}>Blood Tests at Your Doorstep</h1>
             <p style={S.heroSub}>
-              Skip the commute. Our certified phlebotomists collect your blood sample at home and deliver accurate results within the promised time — serving Islamabad, Rawalpindi and surrounding areas within <strong style={{ color:"#fbbf24" }}>50 km</strong> of our lab.
+              Skip the commute. Our certified phlebotomists collect your blood sample at home and deliver accurate results within the promised time â€” serving Islamabad, Rawalpindi and surrounding areas within <strong style={{ color:"#fbbf24" }}>50 km</strong> of our lab.
             </p>
             <button onClick={() => setModalOpen(true)} style={S.heroBtn}>
-              🏠 Request Home Collection
+              ðŸ  Request Home Collection
             </button>
           </div>
 
           {/* Info cards */}
-          <div style={{ ...S.heroCards, ...(mobile && { gridTemplateColumns:"1fr 1fr" }) }}>
+          <div style={{ ...S.heroCards, ...(mobile && { gridTemplateColumns: width <= 420 ? "1fr" : "1fr 1fr" }) }}>
             {[
-              { icon:"🩸", title:"Blood Tests Only",   desc:"We collect blood samples at home. Radiology tests require lab visit."  },
-              { icon:"📍", title:"50 km Coverage",     desc:"Islamabad, Rawalpindi & surrounding areas within 50 km of H-9."        },
-              { icon:"💰", title:`PKR ${HOME_CHARGE} Fee`, desc:"A flat home collection charge applies on top of the test price." },
-              { icon:"⏱", title:"Same-Day Dispatch",  desc:"Your sample is dispatched to our lab immediately after collection."     },
+              { icon:"ðŸ©¸", title:"Blood Tests Only",   desc:"We collect blood samples at home. Radiology tests require lab visit."  },
+              { icon:"ðŸ“", title:"50 km Coverage",     desc:"Islamabad, Rawalpindi & surrounding areas within 50 km of H-9."        },
+              { icon:"ðŸ’°", title:`PKR ${HOME_CHARGE} Fee`, desc:"A flat home collection charge applies on top of the test price." },
+              { icon:"â±", title:"Same-Day Dispatch",  desc:"Your sample is dispatched to our lab immediately after collection."     },
             ].map((c) => (
               <div key={c.title} style={S.infoCard}>
                 <div style={S.infoCardIcon}>{c.icon}</div>
@@ -596,17 +597,17 @@ export default function HomeSample() {
           </div>
         </div>
 
-        {/* ── How it works ── */}
+        {/* â”€â”€ How it works â”€â”€ */}
         <div style={S.sectionHead}>
           <h2 style={S.sectionTitle}>How It Works</h2>
           <p style={S.sectionSub}>Simple 4-step process from request to results</p>
         </div>
-        <div style={{ ...S.stepsRow, ...(mobile && { gridTemplateColumns:"1fr 1fr" }) }}>
+        <div style={{ ...S.stepsRow, ...(mobile && { gridTemplateColumns: width <= 420 ? "1fr" : "1fr 1fr" }) }}>
           {[
-            { n:"1", icon:"📋", title:"Submit Request",    desc:"Fill the form with your details, test, date & address."        },
-            { n:"2", icon:"📞", title:"Confirmation Call", desc:"Our team confirms your appointment via WhatsApp within 2 hours." },
-            { n:"3", icon:"🚗", title:"Phlebotomist Visits",desc:"Our certified staff arrives at your address on time."           },
-            { n:"4", icon:"📄", title:"Get Results",       desc:"Report delivered via WhatsApp or downloadable from portal."     },
+            { n:"1", icon:"ðŸ“‹", title:"Submit Request",    desc:"Fill the form with your details, test, date & address."        },
+            { n:"2", icon:"ðŸ“ž", title:"Confirmation Call", desc:"Our team confirms your appointment via WhatsApp within 2 hours." },
+            { n:"3", icon:"ðŸš—", title:"Phlebotomist Visits",desc:"Our certified staff arrives at your address on time."           },
+            { n:"4", icon:"ðŸ“„", title:"Get Results",       desc:"Report delivered via WhatsApp or downloadable from portal."     },
           ].map((s) => (
             <div key={s.n} style={S.stepCard}>
               <div style={S.stepNum}>{s.n}</div>
@@ -617,9 +618,9 @@ export default function HomeSample() {
           ))}
         </div>
 
-        {/* ── Coverage areas ── */}
+        {/* â”€â”€ Coverage areas â”€â”€ */}
         <div style={S.sectionHead}>
-          <h2 style={S.sectionTitle}>📍 Coverage Areas (within 50 km)</h2>
+          <h2 style={S.sectionTitle}>ðŸ“ Coverage Areas (within 50 km)</h2>
           <p style={S.sectionSub}>We currently serve the following areas. Outside this range? Call us to check.</p>
         </div>
         <div style={{ ...S.coverageGrid, ...(mobile && { gridTemplateColumns:"1fr" }) }}>
@@ -635,9 +636,9 @@ export default function HomeSample() {
           ))}
         </div>
 
-        {/* ── Available blood tests ── */}
+        {/* â”€â”€ Available blood tests â”€â”€ */}
         <div style={{ ...S.sectionHead, marginTop:40 }}>
-          <h2 style={S.sectionTitle}>🩸 Available Blood Tests</h2>
+          <h2 style={S.sectionTitle}>ðŸ©¸ Available Blood Tests</h2>
           <p style={S.sectionSub}>All prices shown include the PKR {HOME_CHARGE} home collection charge in the total</p>
         </div>
         <div style={S.grid}>
@@ -646,7 +647,7 @@ export default function HomeSample() {
           ))}
         </div>
 
-        {/* ── My Requests (if any submitted) ── */}
+        {/* â”€â”€ My Requests (if any submitted) â”€â”€ */}
         {error && (
           <div style={{ marginTop:24, padding:"12px 14px", borderRadius:10, background:"rgba(127,29,29,0.5)", border:"1px solid rgba(248,113,113,0.3)", color:"#fecaca", fontSize:13, fontWeight:700 }}>
             {error}
@@ -656,13 +657,16 @@ export default function HomeSample() {
         {(loading || requests.length > 0) && (
           <>
             <div style={{ ...S.sectionHead, marginTop:48 }}>
-              <h2 style={S.sectionTitle}>📋 My Requests</h2>
+              <h2 style={S.sectionTitle}>ðŸ“‹ My Requests</h2>
               <p style={S.sectionSub}>Track your submitted home sample collection requests</p>
             </div>
             {loading ? (
               <div style={S.loadingBox}>Loading your home sample requests...</div>
             ) : <div style={S.grid}>
-              {requests.map((r) => (
+              {requests.map((r) => {
+                const hasCollector = r.collectorName || r.bikeNumber || r.collectorContact || r.reachTime;
+
+                return (
                 <div key={r.reqId} style={S.requestCard}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
                     <span style={{ color:"#60a5fa", fontSize:12, fontWeight:700 }}>{r.reqId}</span>
@@ -671,22 +675,34 @@ export default function HomeSample() {
                     </span>
                   </div>
                   <div style={{ fontWeight:800, fontSize:16, color:"#f9fafb", marginBottom:4 }}>{r.testName}</div>
-                  <div style={{ color:"#9ca3af", fontSize:13, marginBottom:10 }}>📍 {r.area} &nbsp;•&nbsp; 📅 {r.date} &nbsp;•&nbsp; 🕐 {r.time}</div>
+                  <div style={{ color:"#9ca3af", fontSize:13, marginBottom:10 }}>ðŸ“ {r.area} &nbsp;â€¢&nbsp; ðŸ“… {r.date} &nbsp;â€¢&nbsp; ðŸ• {r.time}</div>
+                  {hasCollector && (
+                    <div style={S.collectorBox}>
+                      <div style={S.collectorTitle}>ASSIGNED COLLECTOR</div>
+                      <div style={S.collectorGrid}>
+                        <span>Name: {r.collectorName || "Not assigned"}</span>
+                        <span>Bike: {r.bikeNumber || "Not assigned"}</span>
+                        <span>Contact: {r.collectorContact || "Not assigned"}</span>
+                        <span>Reach Time: {r.reachTime || "Not assigned"}</span>
+                      </div>
+                    </div>
+                  )}
                   <div style={{ display:"flex", justifyContent:"space-between", borderTop:"1px solid rgba(255,255,255,0.07)", paddingTop:10 }}>
                     <span style={{ color:"#9ca3af", fontSize:13 }}>Total Payable</span>
                     <span style={{ color:"#f59e0b", fontWeight:800, fontSize:15 }}>PKR {r.totalPrice?.toLocaleString()}</span>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>}
           </>
         )}
       </main>
 
-      {/* ══ FOOTER ══ */}
+      {/* â•â• FOOTER â•â• */}
       <Footer mobile={mobile} />
 
-      {/* ══ MODAL ══ */}
+      {/* â•â• MODAL â•â• */}
       {modalOpen && (
         <RequestModal
           user={{ ...user, ...(preselect && { _preselect: preselect }) }}
@@ -697,7 +713,7 @@ export default function HomeSample() {
         />
       )}
 
-      {/* ══ TOAST ══ */}
+      {/* â•â• TOAST â•â• */}
       {toast.msg && (
         <div style={{ ...S.toast, ...(mobile && S.toastMobile) }}>{toast.msg}</div>
       )}
@@ -705,7 +721,7 @@ export default function HomeSample() {
   );
 }
 
-// ── Styles ────────────────────────────────────────────────────────────────────
+// â”€â”€ Styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const S = {
   page:             { minHeight:"100vh", background:"linear-gradient(160deg,#220405 0%,#4a0b0d 42%,#1a0304 100%)", color:"#f3f4f6", fontFamily:"'Segoe UI',system-ui,sans-serif", display:"flex", flexDirection:"column" },
   container:        { maxWidth:1200, margin:"0 auto", padding:28 },
@@ -747,6 +763,7 @@ const S = {
 
   // Hero section
   hero:             { display:"grid", gridTemplateColumns:"1fr 1fr", gap:32, alignItems:"start", padding:"40px 0 32px" },
+  heroMobile:       { gridTemplateColumns:"1fr", gap:22, padding:"28px 0 24px" },
   heroText:         { display:"flex", flexDirection:"column", gap:16 },
   heroBadge:        { display:"inline-flex", alignItems:"center", gap:6, padding:"6px 14px", borderRadius:999, background:"rgba(220,38,38,0.2)", border:"1px solid rgba(220,38,38,0.4)", color:"#fca5a5", fontSize:13, fontWeight:600, width:"fit-content" },
   heroTitle:        { margin:0, fontSize:34, fontWeight:900, color:"#f8fafc", lineHeight:1.2 },
@@ -779,7 +796,7 @@ const S = {
   areaChip:         { fontSize:11, color:"#d1d5db", background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", padding:"3px 9px", borderRadius:999 },
 
   // Blood test cards
-  grid:             { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:18 },
+  grid:             { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,270px),1fr))", gap:18 },
   card:             { background:"#2a0608", border:"1px solid rgba(220,38,38,0.35)", borderRadius:16, padding:20, boxShadow:"0 8px 28px rgba(0,0,0,0.4)", transition:"all .2s", display:"flex", flexDirection:"column" },
   cardHover:        { transform:"translateY(-3px)", boxShadow:"0 14px 36px rgba(0,0,0,0.55)", borderColor:"rgba(252,165,165,0.4)" },
   cardTop:          { display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:12 },
@@ -795,6 +812,9 @@ const S = {
   // Request card (submitted)
   requestCard:      { background:"rgba(255,255,255,0.04)", border:"1px solid rgba(139,0,0,0.35)", borderRadius:14, padding:18 },
   statusPill:       { display:"inline-flex", alignItems:"center", gap:5, padding:"4px 10px", borderRadius:999, border:"1px solid", fontSize:12, fontWeight:700 },
+  collectorBox:     { margin:"12px -18px 12px", padding:"12px 18px", background:"#ecfdf5", borderTop:"1px solid #86efac", borderBottom:"1px solid #86efac", color:"#065f46" },
+  collectorTitle:   { marginBottom:10, color:"#008000", fontSize:12, fontWeight:900, textTransform:"uppercase", letterSpacing:0.5 },
+  collectorGrid:    { display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))", gap:"8px 18px", fontSize:12, color:"#065f46" },
   loadingBox:       { padding:"18px", borderRadius:14, background:"rgba(255,255,255,0.04)", border:"1px solid rgba(139,0,0,0.35)", color:"#fecaca", fontSize:13, fontWeight:700 },
 
   // Modal
@@ -827,6 +847,7 @@ const S = {
 
   // Footer
   footer:           { marginTop:"auto", background:"#130202", borderTop:"1px solid rgba(139,0,0,0.5)", padding:"48px 0 0" },
+  footerLink:       { display:"block", width:"fit-content", padding:0, border:"none", background:"transparent", fontSize:13, marginBottom:9, cursor:"pointer", color:"#fca5a5", lineHeight:1.5, textAlign:"left" },
   footerBottom:     { borderTop:"1px solid rgba(255,255,255,0.08)", padding:"20px 28px", textAlign:"center", fontSize:12, color:"#fca5a5" },
 
   // Toast
